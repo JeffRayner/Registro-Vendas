@@ -1,7 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
-	const modal = new bootstrap.Modal(document.querySelector('#modalTutorial'));
-	modal.show();
-});
+
 
 // Valores de Display
 const entrada = document.querySelector("#entradaValue");
@@ -20,18 +17,31 @@ let items;
 const getItensBD = () => JSON.parse(localStorage.getItem("db_items")) ?? [];
 const setItensBD = () => localStorage.setItem("db_items", JSON.stringify(items));
 
-loadItens();
+
+
+window.addEventListener('DOMContentLoaded', () => {
+	loadItens();
+	const modal = new bootstrap.Modal(document.querySelector('#modalTutorial'));
+	modal.show();
+});
 
 
 function loadItens() {
 	items = getItensBD();
 	tbody.innerHTML = "";
 	items.forEach((item, index) => {
-		insertItem(index, item);
+		listarItems(index, item);
 	});
 	setDisplayValues();
 }
 
+function inserItem(desc, valor, tipo){
+	items.push({
+		desc: desc,
+		valor: Math.abs(valor).toFixed(2),
+		tipo: tipo,
+	});
+}
 
 function deleteItem(index) {
 	items.splice(index, 1);
@@ -40,14 +50,14 @@ function deleteItem(index) {
 }
 
 
-function insertItem(index, item) {
+function listarItems(index, item) {
 	let tr = document.createElement("tr");
 	tr.innerHTML = `
     <th scope="row">${index + 1}</th>
     <td>${item.desc}</td>
-    <td>R$ ${item.amount}</td>
+    <td>R$ ${item.valor}</td>
     <td class="columnAction d-flex flex-row justify-content-around">
-		${item.type === "Venda"
+		${item.tipo === "Venda"
 			? '<i class="bi bi-arrow-up-circle-fill text-success"></i>'
 			: '<i class="bi bi-arrow-down-circle-fill text-danger"></i>'
 		}
@@ -58,8 +68,8 @@ function insertItem(index, item) {
 
 
 function setDisplayValues() {
-	let totalEntrada = items.filter((item) => item.type === "Venda").map((transaction) => Number(transaction.amount));
-	let totalSaida = items.filter((item) => item.type === "Estorno").map((transaction) => Number(transaction.amount));
+	let totalEntrada = items.filter((item) => item.tipo === "Venda").map((transaction) => Number(transaction.valor));
+	let totalSaida = items.filter((item) => item.tipo === "Estorno").map((transaction) => Number(transaction.valor));
 
 	totalEntrada = Math.abs(totalEntrada.reduce((acc, cur) => acc + cur, 0)).toFixed(2);
 	totalSaida = Math.abs(totalSaida.reduce((acc, cur) => acc + cur, 0)).toFixed(2);
@@ -76,13 +86,7 @@ btnCadastro.onclick = function () {
 	if (descricao.value === "" || valor.value === "") {
 		return alert("Preencha os Campos!")
 	}
-
-	items.push({
-		desc: descricao.value,
-		amount: Math.abs(valor.value).toFixed(2),
-		type: tipoCadastro.value,
-	});
-
+	inserItem(descricao.value, valor.value, tipoCadastro.value);
 	setItensBD();
 	loadItens();
 	valor.value = "";
@@ -90,18 +94,16 @@ btnCadastro.onclick = function () {
 }
 
 
-const csvmaker = function (data) {
+function criarCSV(data){
 	csvRows = [];
-	const headers = ["ID", "Descricao", "Valor", "Tipo"];
-	csvRows.push(headers.join(';'));
+	csvRows.push(["ID", "Descricao", "Valor", "Tipo"].join(';'));
 	data.forEach((item, index) => {
-		csvRows.push([index, item["desc"], item["amount"], item["type"]].join(';'))
+		csvRows.push([index, item["desc"], item["valor"], item["tipo"]].join(';'))
 	});
 	return csvRows.join('\n')
 }
 
-
-const download = function (data) {
+function downloadArquivo(data){
 	const blob = new Blob([data], { type: 'text/csv' });
 	const url = window.URL.createObjectURL(blob)
 	const a = document.createElement('a')
@@ -110,14 +112,15 @@ const download = function (data) {
 	a.click()
 }
 
-
-function sendMail() {
-	download(csvmaker(items));
+function enviarEmail() {
 	var mailTo = "mailto:adilson.gandrade@sp.senac.br"
 		+ "?cc=jeff.rfsimoes@sp.senac.br"
 		+ "&subject=" + encodeURIComponent("Livro Caixa - Bussiness Day")
-		+ "&body=" + encodeURIComponent("Exemplo de Texto no corpo do E-mail");
+		+ "&body=" + encodeURIComponent("Coloque informaçoes da sua turma e produto;serviço");
 	window.location.href = mailTo;
-	
 }
 
+function fecharLivroCaixa(){
+	downloadArquivo(criarCSV(items));
+	setTimeout( enviarEmail , 6000);
+}
