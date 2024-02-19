@@ -1,4 +1,6 @@
-
+// E-mails dos responsáveis pela auditoria das vendas realizadas
+const destinatario1 = 'adilson.gandrade@sp.senac.br';
+const destinatario2 = 'jeff.rfsimoes@sp.senac.br';
 
 // Valores de Display
 const entrada = document.querySelector("#entradaValue");
@@ -22,6 +24,7 @@ const setItensBD = () => localStorage.setItem("db_items", JSON.stringify(items))
 window.addEventListener('DOMContentLoaded', () => {
 	loadItens();
 	const modal = new bootstrap.Modal(document.querySelector('#modalTutorial'));
+    document.getElementById("destinatarios").innerHTML = destinatario1+'<br>'+destinatario2;
 	modal.show();
 });
 
@@ -113,8 +116,9 @@ function downloadArquivo(data){
 }
 
 function enviarEmail() {
-	var mailTo = "mailto:adilson.gandrade@sp.senac.br"
-		+ "?cc=jeff.rfsimoes@sp.senac.br"
+	var mailTo = "mailto:"
+        + destinatario1
+		+ "?cc=" + destinatario2
 		+ "&subject=" + encodeURIComponent("Livro Caixa - Bussiness Day")
 		+ "&body=" + encodeURIComponent("Coloque informaçoes da sua turma e produto;serviço");
 	window.location.href = mailTo;
