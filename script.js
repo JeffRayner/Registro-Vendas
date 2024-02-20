@@ -19,15 +19,12 @@ let items;
 const getItensBD = () => JSON.parse(localStorage.getItem("db_items")) ?? [];
 const setItensBD = () => localStorage.setItem("db_items", JSON.stringify(items));
 
-
-
 window.addEventListener('DOMContentLoaded', () => {
 	loadItens();
 	const modal = new bootstrap.Modal(document.querySelector('#modalTutorial'));
     document.getElementById("destinatarios").innerHTML = destinatario1+'<br>'+destinatario2;
 	modal.show();
 });
-
 
 function loadItens() {
 	items = getItensBD();
@@ -101,7 +98,7 @@ function criarCSV(data){
 	csvRows = [];
 	csvRows.push(["ID", "Descricao", "Valor", "Tipo"].join(';'));
 	data.forEach((item, index) => {
-		csvRows.push([index, item["desc"], item["valor"], item["tipo"]].join(';'))
+		csvRows.push([index, item["desc"], item["valor"].toString().replace(".", ","), item["tipo"]].join(';'))
 	});
 	return csvRows.join('\n')
 }
