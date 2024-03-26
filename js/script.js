@@ -1,3 +1,6 @@
+import {QRCode} from "js/qrcode.js" ;
+
+
 // E-mails dos responsáveis pela auditoria das vendas realizadas
 const destinatario1 = 'adilson.gandrade@sp.senac.br';
 const destinatario2 = 'jeff.rfsimoes@sp.senac.br';
@@ -7,17 +10,20 @@ const entrada = document.querySelector("#entradaValue");
 const saida = document.querySelector("#saidaValue");
 const total = document.querySelector("#totalValue");
 
-// Formulario de Cadastro
+// Formulario de Registro Manual
 const btnCadastro = document.querySelector("#btnCadastrar");
 const descricao = document.querySelector("#descricao");
 const valor = document.querySelector("#valor");
 const tipoCadastro = document.querySelector("#tipoCadastro");
 
-const tbody = document.querySelector("tbody");
+const tbody = document.querySelector("#tabelaVendas");
 
+let produtos;
 let items;
 const getItensBD = () => JSON.parse(localStorage.getItem("db_items")) ?? [];
 const setItensBD = () => localStorage.setItem("db_items", JSON.stringify(items));
+
+
 
 window.addEventListener('DOMContentLoaded', () => {
 	loadItens();
@@ -25,6 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("destinatarios").innerHTML = destinatario1+'<br>'+destinatario2;
 	modal.show();
 });
+
 
 function loadItens() {
 	items = getItensBD();
@@ -35,6 +42,7 @@ function loadItens() {
 	setDisplayValues();
 }
 
+
 function inserItem(desc, valor, tipo){
 	items.push({
 		desc: desc,
@@ -42,6 +50,7 @@ function inserItem(desc, valor, tipo){
 		tipo: tipo,
 	});
 }
+
 
 function deleteItem(index) {
 	items.splice(index, 1);
@@ -61,7 +70,7 @@ function listarItems(index, item) {
 			? '<i class="bi bi-arrow-up-circle-fill text-success"></i>'
 			: '<i class="bi bi-arrow-down-circle-fill text-danger"></i>'
 		}
-		<button type="button" onclick="deleteItem(${index})" class="btn btn-warning px-1 py-0"><i class="bi bi-trash"></i></button>
+		<button onclick="deleteItem(${index})" class="btn btn-warning px-1 py-0" title="Apagar Elemento"><i class="bi bi-trash"></i></button>
     </td>`;
 	tbody.appendChild(tr);
 }
@@ -94,6 +103,13 @@ btnCadastro.onclick = function () {
 }
 
 
+function gerarQrCode(){
+	console.log('ok');
+	// new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+}
+
+
+
 function criarCSV(data){
 	csvRows = [];
 	csvRows.push(["ID", "Descricao", "Valor", "Tipo"].join(';'));
@@ -102,6 +118,7 @@ function criarCSV(data){
 	});
 	return csvRows.join('\n')
 }
+
 
 function downloadArquivo(data){
 	const blob = new Blob([data], { type: 'text/csv' });
@@ -112,6 +129,7 @@ function downloadArquivo(data){
 	a.click()
 }
 
+
 function enviarEmail() {
 	var mailTo = "mailto:"
         + destinatario1
@@ -120,6 +138,7 @@ function enviarEmail() {
 		+ "&body=" + encodeURIComponent("Coloque informaçoes da sua turma e produto;serviço");
 	window.location.href = mailTo;
 }
+
 
 function fecharLivroCaixa(){
 	downloadArquivo(criarCSV(items));
