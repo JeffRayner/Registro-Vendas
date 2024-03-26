@@ -19,6 +19,8 @@ let items;
 const getItensBD = () => JSON.parse(localStorage.getItem("db_items")) ?? [];
 const setItensBD = () => localStorage.setItem("db_items", JSON.stringify(items));
 
+const itensDeVenda = document.getElementsByName("itensDeVenda");
+
 window.addEventListener('DOMContentLoaded', () => {
 	loadItens();
 	const modal = new bootstrap.Modal(document.querySelector('#modalTutorial'));
@@ -49,7 +51,6 @@ function deleteItem(index) {
 	loadItens();
 }
 
-
 function listarItems(index, item) {
 	let tr = document.createElement("tr");
 	tr.innerHTML = `
@@ -66,7 +67,6 @@ function listarItems(index, item) {
 	tbody.appendChild(tr);
 }
 
-
 function setDisplayValues() {
 	let totalEntrada = items.filter((item) => item.tipo === "Venda").map((transaction) => Number(transaction.valor));
 	let totalSaida = items.filter((item) => item.tipo === "Estorno").map((transaction) => Number(transaction.valor));
@@ -81,10 +81,9 @@ function setDisplayValues() {
 	total.innerHTML = saldoCaixa;
 }
 
-
 btnCadastro.onclick = function () {
 	if (descricao.value === "" || valor.value === "") {
-		return alert("Preencha os Campos!")
+		return alert("Preencha o valor da venda!")
 	}
 	inserItem(descricao.value, valor.value, tipoCadastro.value);
 	setItensBD();
@@ -92,7 +91,6 @@ btnCadastro.onclick = function () {
 	valor.value = "";
 	tipoCadastro.value = "Venda";
 }
-
 
 function criarCSV(data){
 	csvRows = [];
@@ -125,3 +123,115 @@ function fecharLivroCaixa(){
 	downloadArquivo(criarCSV(items));
 	setTimeout( enviarEmail , 6000);
 }
+
+///// Foi utilizada como base para inserir os produtos um código de "To Do List"
+function btnItensDeVenda(idItensDeVenda) {
+	descricao.value=itensDeVenda[idItensDeVenda].innerText;	
+	valor.value = "";
+	tipoCadastro.value = "Venda";
+}
+
+
+   /* Metthod for add todo  */
+   let addTodo = () => {
+		let todoText = document.getElementById('todo-text').value;
+		if(todoText != ''){
+			setData(todoText); // handler for adding item into local storage
+			listTodo(); // handler for showing item from local storage
+		}
+	}
+
+/* handler for print todo  */
+let originallistTodo = () => {
+	let html = ``;
+	let data = getData(); // handler for getting item from local storage
+	if(data){
+		html += `<ol>`;
+		data.forEach((value,item
+		) => {
+			html += `<li>${value} &nbsp;&nbsp;&nbsp;<button onclick="removeData(${item})">Remove</button></li>`;
+		});
+		html += `</ol>`;
+	}
+	document.getElementById('todo-item').innerHTML = html;
+}
+
+/* handler for print todo - ADAPTADO  */
+let listTodo = () => {
+	let html = ``;
+	let data = getData(); // handler for getting item from local storage
+	if(data){
+		html += `<ol>`;
+		data.forEach((value,item
+		) => {
+			html += `
+			<div id="itensVenda" class="task">
+<span id="taskname">
+<button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" name="itensDeVenda" id="${item}"  onclick="btnItensDeVenda(${item})">
+	Registrar Venda de : 
+	${value.toUpperCase()} &nbsp;&nbsp;&nbsp;<button onclick="removeData(${item})"  class="btn btn-warning px-1 py-0"><i class="bi bi-trash"></i></button>	
+</button>				
+</span>
+</div>
+
+			`;
+		});
+		html += `</ol>`;
+	}
+	document.getElementById('todo-item').innerHTML = html;
+}
+
+ /* handler for get todo  */
+let getData = (item = null) => {
+	/*
+	* localStorage.getItem(<itemname>) main method 
+	* (predefined method of js) for getting item from localstorage
+	*/
+	let data = JSON.parse(localStorage.getItem('mytodo')); 
+	if(data){
+
+		if(item) {
+			if(data.indexOf(item) != -1){
+				return data[item];
+			}else{
+				return false;
+			}
+		}
+		return data;
+	}
+	return false;
+}
+
+listTodo(); // call print handler for showing data into list 
+
+ /* handler for set data/item todo  */
+let setData = (item) => {
+	if(getData(item) != false) {
+		alert("Item já adicionado!");
+	}else{
+		let data = getData(); // call getdata handler for getting  data from list 
+		data = (data != false) ? data : []; 
+		data.push(item);
+		data = JSON.stringify(data);
+		/*
+		* localStorage.setItem(<itemname>,<itemvalue>) main method 
+		* (predefined method of js) for set item into localstorage
+		*/
+		localStorage.setItem('mytodo',data);
+	}
+}
+
+/* handler for remove item from localstorage */
+let removeData = (itemId) => {
+		let data = getData();
+		if(data){
+			let newData = data.filter((v,i) => { return i != itemId });
+			newData = JSON.stringify(newData);
+			localStorage.setItem('mytodo',newData);
+			listTodo();
+		}else{
+			alert("Nenhum registro encontrado!");
+		}
+
+} 
+

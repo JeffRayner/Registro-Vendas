@@ -47,9 +47,21 @@
 		</div>
 
 		<div class="d-flex flex-column justify-content-center align-items-center bg-white shadow-sm rounded p-2 mb-4">
+
+			<div class="card">
+				<div class="card-body">
+					<input type="text" name="todo-text" id="todo-text" class=" justify-content-center align-items-center bg-white shadow-sm rounded p-2 mb-4" placeholder="ITENS DE VENDA:" required
+					autofocus />
+					<button id="todo-add" onclick="addTodo()" class="btn btn-success"
+					>Add</button>
+					<div id="todo-item"></div>
+				</div>
+			</div>					
+
 			<button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Registrar
 				Venda</button>
 			<button class="btn btn-danger m-2" onclick="fecharLivroCaixa()">Fechar Caixa</button>
+
 		</div>
 
 		<!-- Modal de Registro -->
@@ -132,5 +144,11 @@
 
 	<script src="script.js"></script>
 </body>
+
+<!--
+https://medium.com/@erp-enterprises/learn-how-to-use-localstorage-in-javascript-with-a-todo-app-b9530d4da813
+https://www.educative.io/answers/how-to-create-a-simple-to-do-list-with-html-css-and-js
+https://github.com/NadiaaOliverr
+-->
 
 </html>
