@@ -1,6 +1,3 @@
-import {QRCode} from "js/qrcode.js" ;
-
-
 // E-mails dos responsáveis pela auditoria das vendas realizadas
 const destinatario1 = 'adilson.gandrade@sp.senac.br';
 const destinatario2 = 'jeff.rfsimoes@sp.senac.br';
@@ -15,6 +12,8 @@ const btnCadastro = document.querySelector("#btnCadastrar");
 const descricao = document.querySelector("#descricao");
 const valor = document.querySelector("#valor");
 const tipoCadastro = document.querySelector("#tipoCadastro");
+
+const bntGerarQRCode = document.querySelector("#bntGerarQRCode");
 
 const tbody = document.querySelector("#tabelaVendas");
 
@@ -103,9 +102,8 @@ btnCadastro.onclick = function () {
 }
 
 
-function gerarQrCode(){
-	console.log('ok');
-	// new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+bntGerarQRCode.onclick = function () {
+	new QRCode(document.getElementById("qrcode"), "https://adilsongandrade.github.io/?codigo_do_produto=Teste%20de%20Produto");
 }
 
 

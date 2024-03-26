@@ -21,6 +21,8 @@
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 		crossorigin="anonymous"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 	<!-- <script src="js\qrcode.js"></script> -->
 </head>
 
@@ -124,8 +126,8 @@
 
 						<label for="valor">Valor do Produto</label>
 						<input id="valor" name="valor1" type="number" class="form-control m-2" required autofocus/>
-
-						<button class="btn btn-success" onclick="gerarQrCode()">Gerar QrCode</button>
+						
+						<button class="btn btn-success" id="bntGerarQRCode">Criar QrCode</button>
 
 						<!-- <label for="tipoCadastro">Tipo de Registro</label>
 						<select id="tipoCadastro" name="tiposEntrada" class="form-select">
@@ -134,6 +136,9 @@
 						</select> -->
 
 						<div id="qrcode" class="d-flex container flex-column justify-content-center align-items-center"></div>
+						<!-- <script type="text/javascript">
+							new QRCode(document.getElementById("qrcode"), "https://adilsongandrade.github.io/?codigo_do_produto=Teste%20de%20Produto");
+						</script> -->
 
 					</div>
 					<div class="modal-footer">
@@ -204,7 +209,7 @@
 		</div>
 	</footer>
 
-	<script src="js\script.js"></script>
+	<script type="module" src="js\script.js"></script>
 </body>
 
 </html>
